@@ -55,18 +55,22 @@ function App() {
     setValue('')
   }
 
-  function markCategory(id) {
+  async function markCategory(id) {
+    const category = categories.concat().find(item => item.id === id)
+    const updatedCategory = await request(`http://localhost:5000/api/categories/${id}`, 'PUT', {...category, marked: true})
+    
     setCategories(
       categories.map(item => {
         if (item.id === id) {
-          item.marked = true
+          item.marked = updatedCategory.marked
         }
         return item
       })
     )
   }
 
-  function removeCategory(id) {
+  async function removeCategory(id) {
+    await request(`http://localhost:5000/api/categories/${id}`, 'DELETE')
     const newCategories = categories.concat().filter(item => item.id !== id)
     setCategories(
       newCategories
